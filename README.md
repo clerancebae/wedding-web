@@ -120,6 +120,24 @@ gsutil cors set cors.json gs://your-project.firebasestorage.app
 4.  Leave settings as default.
 5.  Click **Deploy**
 
+### 🔐 Environment Variables (Vercel)
+
+Before deploying, if you are using a build step or serverless functions, you must add your Firebase configuration as environment variables in Vercel.
+
+### ➕ Add in Vercel Dashboard
+Go to: **Project → Settings → Environment Variables**
+
+Add the following key-value pairs:
+
+```env
+FIREBASE_API_KEY=your_api_key
+FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+FIREBASE_APP_ID=your_app_id
+```
+
 ### Method B: CLI
 
 ``` bash
@@ -129,9 +147,25 @@ npm i -g vercel
 # Login
 vercel login
 
+```
+
+### ➕ Add via Vercel CLI
+
+If you are deploying via the terminal, you can easily add environment variables using the Vercel CLI. Run the following commands in your project directory. The CLI will prompt you to type or paste the value for each variable.
+
+``` bash
+# Add keys to the production environment
+vercel env add FIREBASE_API_KEY production
+vercel env add FIREBASE_AUTH_DOMAIN production
+vercel env add FIREBASE_PROJECT_ID production
+vercel env add FIREBASE_STORAGE_BUCKET production
+vercel env add FIREBASE_MESSAGING_SENDER_ID production
+vercel env add FIREBASE_APP_ID production
+
 # Deploy
 vercel --prod
 ```
+Note: You can replace production with preview or development if you want to restrict these variables to specific deployment environments.
 
 ------------------------------------------------------------------------
 
