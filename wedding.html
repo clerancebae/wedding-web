@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Düğün Anılarını Paylaş 💍</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --gold:       #D4AF37;
+      --gold-light: #F0D875;
+      --gold-dark:  #A8872A;
+      --cream:      #FDFAF4;
+      --parchment:  #F5EDD8;
+      --text-dark:  #2C2416;
+      --text-mid:   #6B5B3E;
+      --text-soft:  #A0917A;
+      --white:      #FFFFFF;
+      --error:      #C0392B;
+      --success:    #2E7D52;
+      --radius:     12px;
+      --shadow:     0 8px 40px rgba(44, 36, 22, 0.12);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background-color: var(--cream);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    }
+
+    body::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+    }
+
+    .page-header {
+      text-align: center;
+      padding: 48px 24px 32px;
+      max-width: 640px;
+      width: 100%;
+    }
+    .floral-divider {
+      color: var(--gold);
+      font-size: 1.4rem;
+      letter-spacing: 0.5em;
+      display: block;
+      margin-bottom: 16px;
+      opacity: 0.85;
+      animation: fadeIn 1s ease both;
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--text-dark);
+      animation: slideUp 0.8s ease both 0.1s;
+    }
+    .page-header h1 em { font-style: italic; color: var(--gold-dark); }
+    .page-header p {
+      margin-top: 14px;
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--text-mid);
+      line-height: 1.6;
+      animation: slideUp 0.8s ease both 0.25s;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      padding: 36px 32px 40px;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 24px 60px;
+      animation: slideUp 0.8s ease both 0.35s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 80px; height: 80px;
+      background: radial-gradient(circle at top left, rgba(212,175,55,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .card::after {
+      content: '';
+      position: absolute; bottom: 0; right: 0;
+      width: 80px; height: 80px;
+      background: radial-gradient(circle at bottom right, rgba(212,175,55,0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .form-group { margin-bottom: 24px; }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      margin-bottom: 8px;
+    }
+    label .required { color: var(--gold); margin-left: 2px; }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid rgba(160, 145, 122, 0.35);
+      border-radius: 8px;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      color: var(--text-dark);
+      background: var(--cream);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+    input[type="text"]::placeholder { color: var(--text-soft); }
+    input[type="text"]:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+      background: var(--white);
+    }
+
+    .drop-zone {
+      border: 2px dashed rgba(212, 175, 55, 0.45);
+      border-radius: 10px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+      background: var(--cream);
+      position: relative;
+    }
+    .drop-zone:hover, .drop-zone.drag-over {
+      background: rgba(212, 175, 55, 0.06);
+      border-color: var(--gold);
+    }
+    .drop-zone input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+    }
+    .drop-zone-icon  { font-size: 2.4rem; display: block; margin-bottom: 10px; }
+    .drop-zone-text  { font-size: 1rem; color: var(--text-mid); line-height: 1.5; }
+    .drop-zone-text strong { color: var(--gold-dark); font-weight: 500; }
+    .drop-zone-hint  { font-size: 0.82rem; color: var(--text-soft); margin-top: 6px; display: block; }
+
+    #preview-section { margin-top: 24px; display: none; }
+    .preview-label {
+      font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-soft); margin-bottom: 12px;
+    }
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+    }
+    .preview-item {
+      position: relative; border-radius: 8px; overflow: hidden;
+      aspect-ratio: 1; background: var(--parchment);
+      box-shadow: 0 2px 8px rgba(44,36,22,0.1);
+      animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .preview-item img,
+    .preview-item video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .video-badge {
+      position: absolute; bottom: 6px; left: 6px;
+      background: rgba(0,0,0,0.55); color: #fff;
+      font-size: 0.65rem; padding: 2px 6px;
+      border-radius: 4px; font-family: sans-serif; letter-spacing: 0.05em;
+    }
+    .remove-btn {
+      position: absolute; top: 5px; right: 5px;
+      width: 22px; height: 22px;
+      background: rgba(0,0,0,0.5); color: #fff;
+      border: none; border-radius: 50%; font-size: 12px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .remove-btn:hover { background: var(--error); }
+
+    .ornament-divider {
+      text-align: center; color: var(--gold); opacity: 0.5;
+      font-size: 1rem; letter-spacing: 0.5em;
+      margin: 28px 0 24px; user-select: none;
+    }
+
+    #upload-btn {
+      width: 100%; padding: 16px 24px;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+      background-size: 200% 200%; background-position: left;
+      color: var(--text-dark);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: background-position 0.5s ease, transform 0.2s ease, box-shadow 0.3s ease, opacity 0.3s;
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+      position: relative; overflow: hidden;
+    }
+    #upload-btn:hover:not(:disabled) {
+      background-position: right;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(212, 175, 55, 0.55);
+    }
+    #upload-btn:active:not(:disabled) { transform: translateY(0); }
+    #upload-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    #upload-btn.loading::after {
+      content: ''; position: absolute; top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 1.2s infinite;
+    }
+
+    #progress-container { margin-top: 20px; display: none; }
+    .progress-info {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 8px; font-size: 0.85rem; color: var(--text-mid);
+    }
+    .progress-track {
+      height: 6px; background: rgba(160, 145, 122, 0.2);
+      border-radius: 99px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+      background-size: 200% 100%; width: 0%;
+      transition: width 0.3s ease;
+      animation: progressShimmer 1.5s linear infinite;
+    }
+
+    #status-message {
+      margin-top: 20px; padding: 16px 20px;
+      border-radius: 8px; font-size: 1rem; line-height: 1.6;
+      display: none; animation: fadeIn 0.4s ease;
+    }
+    #status-message.success {
+      background: rgba(46, 125, 82, 0.08);
+      border: 1.5px solid rgba(46, 125, 82, 0.25);
+      color: var(--success);
+    }
+    #status-message.error {
+      background: rgba(192, 57, 43, 0.07);
+      border: 1.5px solid rgba(192, 57, 43, 0.25);
+      color: var(--error);
+    }
+
+    footer {
+      padding: 16px 24px 32px; text-align: center;
+      font-size: 0.82rem; color: var(--text-soft);
+      font-style: italic; letter-spacing: 0.03em;
+    }
+
+    @keyframes fadeIn  { from { opacity: 0; }                           to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes popIn   { from { opacity: 0; transform: scale(0.8); }    to { opacity: 1; transform: scale(1); } }
+    @keyframes shimmer { to { left: 150%; } }
+    @keyframes progressShimmer {
+      0%   { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 20px 32px; }
+      .preview-grid { grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); gap: 8px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="page-header">
+    <span class="floral-divider">✦ ✦ ✦</span>
+    <h1>Anılarını <em>Paylaş</em></h1>
+    <p>
+      Her büyülü anı birlikte ölümsüzleştirelim.<br/>
+      Fotoğraf ve videolarını yükle, hikayemizin bir parçası ol.
+    </p>
+  </header>
+
+  <main>
+    <div class="card">
+
+      <div class="form-group">
+        <label for="guest-name">Adın Soyadın <span class="required">*</span></label>
+        <input type="text" id="guest-name" placeholder="örn. Ayşe & Mehmet" autocomplete="name" maxlength="80" />
+      </div>
+
+      <div class="form-group">
+        <label>Fotoğraf &amp; Video Seç <span class="required">*</span></label>
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="file-input" accept="image/*,video/*" multiple />
+          <span class="drop-zone-icon">📸</span>
+          <p class="drop-zone-text">
+            <strong>Dosya seç</strong> veya buraya sürükle &amp; bırak
+          </p>
+          <span class="drop-zone-hint">Fotoğraf &amp; video • Birden fazla dosya seçilebilir</span>
+        </div>
+      </div>
+
+      <div id="preview-section">
+        <p class="preview-label">Seçilen dosyalar</p>
+        <div class="preview-grid" id="preview-grid"></div>
+      </div>
+
+      <div class="ornament-divider">— ✦ —</div>
+
+      <button id="upload-btn" type="button">Fotoğraflarını yükle 📸</button>
+
+      <div id="progress-container">
+        <div class="progress-info">
+          <span id="progress-label">Yükleniyor…</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div id="status-message" role="alert"></div>
+
+    </div>
+  </main>
+
+  <footer>Bu özel gün için ❤️ ile yapıldı</footer>
+
+
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getStorage,
+      ref,
+      uploadBytesResumable,
+      getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+    // ─────────────────────────────────────────────────────────────
+    //  Firebase yapılandırması
+    //  Gerçek değerleri Vercel → Settings → Environment Variables'a ekle.
+    //  Bu dosyayı olduğu gibi GitHub'a pushla — içinde gerçek key yok.
+    // ─────────────────────────────────────────────────────────────
+    const firebaseConfig = {
+      apiKey:            "%%VITE_FIREBASE_API_KEY%%",
+      authDomain:        "%%VITE_FIREBASE_AUTH_DOMAIN%%",
+      projectId:         "%%VITE_FIREBASE_PROJECT_ID%%",
+      storageBucket:     "%%VITE_FIREBASE_STORAGE_BUCKET%%",
+      messagingSenderId: "%%VITE_FIREBASE_MESSAGING_SENDER_ID%%",
+      appId:             "%%VITE_FIREBASE_APP_ID%%"
+    };
+
+    const app     = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
+
+    // ── DOM referansları ─────────────────────────────────────────
+    const guestNameInput    = document.getElementById("guest-name");
+    const fileInput         = document.getElementById("file-input");
+    const dropZone          = document.getElementById("drop-zone");
+    const previewSection    = document.getElementById("preview-section");
+    const previewGrid       = document.getElementById("preview-grid");
+    const uploadBtn         = document.getElementById("upload-btn");
+    const progressContainer = document.getElementById("progress-container");
+    const progressFill      = document.getElementById("progress-fill");
+    const progressLabel     = document.getElementById("progress-label");
+    const progressPct       = document.getElementById("progress-pct");
+    const statusMessage     = document.getElementById("status-message");
+
+    let selectedFiles = [];
+
+    // ════════════════════════════════════════════════════════
+    //  SÜRÜKLE & BIRAK
+    // ════════════════════════════════════════════════════════
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("drag-over");
+    });
+    ["dragleave", "dragend"].forEach(evt =>
+      dropZone.addEventListener(evt, () => dropZone.classList.remove("drag-over"))
+    );
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("drag-over");
+      addFilesToSelection(
+        Array.from(e.dataTransfer.files).filter(
+          f => f.type.startsWith("image/") || f.type.startsWith("video/")
+        )
+      );
+    });
+
+    fileInput.addEventListener("change", () => {
+      addFilesToSelection(Array.from(fileInput.files));
+      fileInput.value = "";
+    });
+
+    // ════════════════════════════════════════════════════════
+    //  ÖNİZLEME
+    // ════════════════════════════════════════════════════════
+    function addFilesToSelection(newFiles) {
+      newFiles.forEach(file => {
+        const dup = selectedFiles.some(f => f.name === file.name && f.size === file.size);
+        if (!dup) selectedFiles.push(file);
+      });
+      renderPreviewGrid();
+    }
+
+    function renderPreviewGrid() {
+      previewGrid.innerHTML = "";
+      previewSection.style.display = selectedFiles.length ? "block" : "none";
+      if (!selectedFiles.length) return;
+
+      selectedFiles.forEach((file, index) => {
+        const item = document.createElement("div");
+        item.className = "preview-item";
+
+        if (file.type.startsWith("image/")) {
+          const img = document.createElement("img");
+          img.src = URL.createObjectURL(file);
+          img.alt = file.name;
+          img.onload = () => URL.revokeObjectURL(img.src);
+          item.appendChild(img);
+        } else {
+          const video = document.createElement("video");
+          video.src = URL.createObjectURL(file);
+          video.muted = true;
+          video.playsInline = true;
+          video.addEventListener("loadedmetadata", () => { video.currentTime = 1; });
+          item.appendChild(video);
+          const badge = document.createElement("span");
+          badge.className = "video-badge";
+          badge.textContent = "▶ VİDEO";
+          item.appendChild(badge);
+        }
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "remove-btn";
+        removeBtn.title = "Kaldır";
+        removeBtn.innerHTML = "✕";
+        removeBtn.addEventListener("click", () => {
+          selectedFiles.splice(index, 1);
+          renderPreviewGrid();
+        });
+        item.appendChild(removeBtn);
+        previewGrid.appendChild(item);
+      });
+    }
+
+    // ════════════════════════════════════════════════════════
+    //  YÜKLEME
+    // ════════════════════════════════════════════════════════
+    uploadBtn.addEventListener("click", handleUpload);
+
+    async function handleUpload() {
+      const guestName = guestNameInput.value.trim();
+
+      if (!guestName) {
+        showStatus("Yüklemeden önce lütfen adınızı girin. 😊", "error");
+        guestNameInput.focus();
+        return;
+      }
+      if (!selectedFiles.length) {
+        showStatus("Lütfen en az bir fotoğraf veya video seçin. 📷", "error");
+        return;
+      }
+
+      setUploading(true);
+      showStatus("", "");
+
+      const total  = selectedFiles.length;
+      const errors = [];
+      let uploaded = 0;
+
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        updateProgressUI(i, total, file.name);
+
+        try {
+          const safeName = guestName
+            .replace(/[^a-zA-Z0-9\s\-_]/g, "")
+            .replace(/\s+/g, "_");
+          const fileName   = `${safeName}_${Date.now()}_${file.name}`;
+          const storageRef = ref(storage, `wedding-uploads/${fileName}`);
+
+          await uploadWithProgress(file, storageRef, i, total);
+          uploaded++;
+        } catch (err) {
+          console.error("Yükleme hatası:", file.name, err);
+          errors.push(file.name);
+        }
+      }
+
+      setUploading(false);
+
+      if (!errors.length) {
+        showStatus(
+          `Teşekkürler, ${guestName}! ❤️<br/>
+           ${uploaded} dosya başarıyla yüklendi.
+           Bu özel günümüzde bizimle olduğun için çok mutluyuz!`,
+          "success"
+        );
+        selectedFiles = [];
+        renderPreviewGrid();
+        guestNameInput.value = "";
+        progressContainer.style.display = "none";
+      } else {
+        showStatus(
+          `${total} dosyadan ${uploaded} tanesi yüklendi.<br/>
+           <strong>Yüklenemeyenler:</strong> ${errors.join(", ")}.<br/>
+           Lütfen başarısız dosyalar için tekrar deneyin.`,
+          "error"
+        );
+      }
+    }
+
+    // ════════════════════════════════════════════════════════
+    //  FİREBASE — yükleme + ilerleme
+    // ════════════════════════════════════════════════════════
+    function uploadWithProgress(file, storageRef, fileIndex, total) {
+      return new Promise((resolve, reject) => {
+        const task = uploadBytesResumable(storageRef, file);
+        task.on(
+          "state_changed",
+          (snap) => {
+            const overall = ((fileIndex + snap.bytesTransferred / snap.totalBytes) / total) * 100;
+            setProgressBar(overall);
+          },
+          (err) => reject(err),
+          () => resolve()
+        );
+      });
+    }
+
+    // ════════════════════════════════════════════════════════
+    //  UI YARDIMCILARI
+    // ════════════════════════════════════════════════════════
+    function setUploading(on) {
+      uploadBtn.disabled      = on;
+      guestNameInput.disabled = on;
+      fileInput.disabled      = on;
+      if (on) {
+        uploadBtn.classList.add("loading");
+        uploadBtn.textContent = "Yükleniyor… ✨";
+        progressContainer.style.display = "block";
+        setProgressBar(0);
+      } else {
+        uploadBtn.classList.remove("loading");
+        uploadBtn.textContent = "Fotoğraflarını yükle 📸";
+      }
+    }
+
+    function setProgressBar(pct) {
+      const c = Math.min(100, Math.max(0, pct));
+      progressFill.style.width = `${c.toFixed(1)}%`;
+      progressPct.textContent  = `${Math.round(c)}%`;
+    }
+
+    function updateProgressUI(i, total, name) {
+      const short = name.length > 28 ? name.slice(0, 27) + "…" : name;
+      progressLabel.textContent = `${i + 1} / ${total} yükleniyor — ${short}`;
+    }
+
+    function showStatus(html, type) {
+      statusMessage.innerHTML     = html;
+      statusMessage.className     = type || "";
+      statusMessage.style.display = html ? "block" : "none";
+      if (html) statusMessage.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+  </script>
+</body>
+</html>

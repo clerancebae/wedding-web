@@ -1,0 +1,12 @@
+# Gerçek Firebase key'lerini içeren dosya — ASLA commit etme
+.env
+.env.local
+.env.production
+
+# OS dosyaları
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
