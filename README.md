@@ -2,7 +2,7 @@
 
 ![Preview](./preview.png)
 
-🔗 [**Live Demo:**](https://wedding-web-nine-orpin.vercel.app)
+🔗 [**Live Demo**](https://wedding-web-nine-orpin.vercel.app)
 
 An elegant, mobile-first, single-page web application designed for
 ephemeral serverless media collection. This project allows wedding
